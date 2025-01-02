@@ -27,6 +27,8 @@ services:
     image: mongo
     volumes:
       - mongo_data:/data/db
+    ports:
+      - "27017:27017"  # Bind MongoDB to the host machine's port 27017
     networks:
       - app-network
 
