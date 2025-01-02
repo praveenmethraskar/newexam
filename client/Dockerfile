@@ -1,5 +1,5 @@
 # Use the official Node.js image for building React app
-FROM node:16 AS build
+FROM node:latest AS build
 
 WORKDIR /usr/src/app
 
