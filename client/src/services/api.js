@@ -256,7 +256,7 @@ export const getAllExamCounts = async (franchiseId, period) => {
 
 export const getExamData = async () => {
     const token = sessionStorage.getItem('token'); // Get the token from sessionStorage
-    const response = await axios.get('http://localhost:3001/api/exam-data', { 
+    const response = await axios.get('http://3.109.32.213:3001/api/exam-data', { 
         headers: {
             Authorization: `Bearer ${token}`,
         },
