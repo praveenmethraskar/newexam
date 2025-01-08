@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { createUser, getUsers, deleteUser, updateUser, getFranchises } from '../services/api';
 import { Button, TextField, Grid, Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 
 const CreateUser = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -59,6 +61,7 @@ const CreateUser = () => {
       } else {
         await createUser(formData);
         alert('User created successfully!');
+        navigate(-1);
       }
 
       setEditingUser(null);
