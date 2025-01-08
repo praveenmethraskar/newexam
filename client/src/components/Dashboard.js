@@ -19,6 +19,13 @@ const Dashboard = () => {
     }
   };
 
+  // Define common styles for header buttons
+  const headerButtonStyles = {
+    padding: '14px 24px',
+    fontSize: '16px',
+    height: '56px', // Ensures all buttons have the same height
+  };
+
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
       <Paper elevation={4} sx={{ p: 4, mb: 4 }}>
@@ -27,7 +34,7 @@ const Dashboard = () => {
           align="center"
           color="red"
           gutterBottom
-          sx={{ mb: 6 }} 
+          sx={{ mb: 6 }}
         >
           WELCOME TO SUPERADMIN DASHBOARD
         </Typography>
@@ -37,7 +44,7 @@ const Dashboard = () => {
               variant="contained"
               color="primary"
               fullWidth
-              sx={{ padding: '14px 24px', fontSize: '16px' }}
+              sx={headerButtonStyles}
               onClick={() => navigate('/create-superadmin')}
             >
               Create User
@@ -48,39 +55,36 @@ const Dashboard = () => {
               variant="contained"
               color="secondary"
               fullWidth
-              sx={{ padding: '14px 24px', fontSize: '16px' }}
+              sx={headerButtonStyles}
               onClick={() => navigate('/create-franchise')}
             >
               Create Franchise
             </Button>
           </Grid>
-
           <Grid item xs={12} md={3}>
             <Button
               variant="contained"
               color="success"
               fullWidth
               sx={{
-                padding: '16px 28px',
-                fontSize: '18px',
-                backgroundColor: '#4CAF50', 
+                ...headerButtonStyles,
+                backgroundColor: '#4CAF50',
                 '&:hover': {
-                  backgroundColor: '#45a049', 
-                  boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)', 
+                  backgroundColor: '#45a049',
+                  boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)',
                 },
               }}
-              onClick={() => navigate('/exam-data')} 
+              onClick={() => navigate('/exam-data')}
             >
               Manage Exam Data
             </Button>
           </Grid>
-
           <Grid item xs={12} md={3}>
             <Button
               variant="contained"
               color="error"
               fullWidth
-              sx={{ padding: '14px 24px', fontSize: '16px' }}
+              sx={headerButtonStyles}
               onClick={handleLogout}
             >
               Logout
