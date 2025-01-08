@@ -69,6 +69,8 @@ const franchiseSchema = new mongoose.Schema({
     
 });
 
+franchiseSchema.index({ name: 1, location: 1 }, { unique: true });
+
 const Franchise = mongoose.model('Franchise', franchiseSchema);
 
 const userSchema = new mongoose.Schema({
@@ -159,16 +161,29 @@ app.post('/admins', authenticate(['superadmin']), async (req, res) => {
     }
 });
 // Franchise Creation API
-app.post('/franchises', authenticate(['superadmin','admin']), async (req, res) => {
+app.post('/franchises', authenticate(['superadmin', 'admin']), async (req, res) => {
     const { name, location, status, contactNumber } = req.body;
+
     try {
+        // Create and save the franchise
         const franchise = new Franchise({ name, location, status, contactNumber });
         await franchise.save();
+
+        // Respond with the newly created franchise
         res.status(201).json(franchise);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        // Handle duplicate franchise error
+        if (error.code === 11000) {
+            res.status(400).json({ 
+                message: 'A franchise with the same name and location already exists.' 
+            });
+        } else {
+            // Handle other errors
+            res.status(500).json({ message: error.message });
+        }
     }
 });
+
 // User Creation API
 app.post('/admins', authenticate(['superadmin']), async (req, res) => {
     const { username, password, name, franchiseId } = req.body;
