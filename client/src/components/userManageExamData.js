@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getAssociatedFranchises, fetchDurationOptions, createUserExamData } from '../services/api';
 
 const AssociatedFranchises = () => {
+  const navigate = useNavigate();
   const [examData, setExamData] = useState({
     examName: '',
-    date: '',
+    date: new Date().toISOString().split('T')[0], // Default to today's date
     durationInMinutes: '',
     status: 'Inprogress',
     franchiseId: '',
@@ -126,9 +128,10 @@ const AssociatedFranchises = () => {
       await createUserExamData(payload.examData, examData.franchiseId);
 
       setSuccess('Exam data created successfully!');
+      navigate(-1);
       setExamData({
         examName: '',
-        date: '',
+        date: new Date().toISOString().split('T')[0], // Reset to today's date
         durationInMinutes: '',
         status: 'Inprogress',
         franchiseId: '',
