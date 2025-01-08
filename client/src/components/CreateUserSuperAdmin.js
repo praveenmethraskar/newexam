@@ -1,8 +1,28 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { createUser, getUsers, deleteUser, updateUser, getFranchises } from '../services/api';
-import { Button, TextField, Grid, Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import {
+  Button,
+  TextField,
+  Grid,
+  Box,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+} from '@mui/material';
 
 const CreateUserSuperAdmin = () => {
+  const navigate = useNavigate(); // Initialize useNavigate
+
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -28,7 +48,6 @@ const CreateUserSuperAdmin = () => {
     const fetchUsers = async () => {
       try {
         const response = await getUsers();
-        
         setUsers(response);
       } catch (error) {
         alert('Error fetching users: ' + (error.response?.data?.message || error.message));
@@ -42,7 +61,6 @@ const CreateUserSuperAdmin = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === 'franchiseId') {
-      
       setFormData({ ...formData, [name]: typeof value === 'string' ? value.split(',') : value });
     } else {
       setFormData({ ...formData, [name]: value });
@@ -59,6 +77,7 @@ const CreateUserSuperAdmin = () => {
       } else {
         await createUser(formData);
         alert('User created successfully!');
+        navigate(-1); // Redirect to the previous page
       }
 
       setEditingUser(null);
@@ -81,10 +100,10 @@ const CreateUserSuperAdmin = () => {
     setEditingUser(user);
     setFormData({
       username: user.username || '',
-      password: '', 
+      password: '',
       name: user.name || '',
       role: user.role || '',
-      franchiseId: user.franchiseId || [], 
+      franchiseId: user.franchiseId || [],
     });
   };
 
@@ -119,7 +138,7 @@ const CreateUserSuperAdmin = () => {
                 required
                 variant="outlined"
                 InputLabelProps={{
-                  shrink: formData.username.length > 0, 
+                  shrink: formData.username.length > 0,
                 }}
               />
             </Grid>
@@ -131,10 +150,10 @@ const CreateUserSuperAdmin = () => {
                 value={formData.password}
                 onChange={handleChange}
                 fullWidth
-                required={!editingUser} 
+                required={!editingUser}
                 variant="outlined"
                 InputLabelProps={{
-                  shrink: formData.password.length > 0, 
+                  shrink: formData.password.length > 0,
                 }}
               />
             </Grid>
@@ -148,7 +167,7 @@ const CreateUserSuperAdmin = () => {
                 required
                 variant="outlined"
                 InputLabelProps={{
-                  shrink: formData.name.length > 0, 
+                  shrink: formData.name.length > 0,
                 }}
               />
             </Grid>
@@ -176,7 +195,7 @@ const CreateUserSuperAdmin = () => {
                   value={formData.franchiseId}
                   onChange={handleChange}
                   label="Franchise"
-                  multiple 
+                  multiple
                   disabled={isEditingSelf}
                 >
                   <MenuItem value="">Select Franchise</MenuItem>
@@ -216,47 +235,50 @@ const CreateUserSuperAdmin = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-  {users.length > 0 ? (
-    users.map((user) => {
-      
+            {users.length > 0 ? (
+              users.map((user) => {
+                const franchise = user.franchise || [];
+                const franchiseNames = franchise
+                  .map((franchiseItem) => {
+                    const franchiseDetails = franchises.find(
+                      (franchise) => franchise._id === franchiseItem._id
+                    );
+                    return franchiseDetails ? franchiseDetails.name : 'N/A';
+                  })
+                  .join(', ') || 'No franchise assigned';
 
-      
-      const franchise = user.franchise || [];  
-      const franchiseNames = franchise.map((franchiseItem) => {
-        const franchiseDetails = franchises.find((franchise) => franchise._id === franchiseItem._id);
-        
-        return franchiseDetails ? franchiseDetails.name : 'N/A'; 
-      }).join(', ') || 'No franchise assigned'; 
-
-      return (
-        <TableRow key={user._id}>
-          <TableCell>{user.username}</TableCell>
-          <TableCell>{user.name}</TableCell>
-          <TableCell>{user.role}</TableCell>
-          <TableCell>{franchiseNames}</TableCell> {/* Display the franchise names */}
-          <TableCell>
-            <Button onClick={() => handleEdit(user)} color="primary" size="small">Edit</Button>
-            {user.role !== 'superadmin' && (
-              <Button
-                onClick={() => handleDelete(user._id)}
-                color="error"
-                size="small"
-                sx={{ marginLeft: 1 }}
-              >
-                Delete
-              </Button>
+                return (
+                  <TableRow key={user._id}>
+                    <TableCell>{user.username}</TableCell>
+                    <TableCell>{user.name}</TableCell>
+                    <TableCell>{user.role}</TableCell>
+                    <TableCell>{franchiseNames}</TableCell>
+                    <TableCell>
+                      <Button onClick={() => handleEdit(user)} color="primary" size="small">
+                        Edit
+                      </Button>
+                      {user.role !== 'superadmin' && (
+                        <Button
+                          onClick={() => handleDelete(user._id)}
+                          color="error"
+                          size="small"
+                          sx={{ marginLeft: 1 }}
+                        >
+                          Delete
+                        </Button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+            ) : (
+              <TableRow>
+                <TableCell colSpan={5} align="center">
+                  No users available
+                </TableCell>
+              </TableRow>
             )}
-          </TableCell>
-        </TableRow>
-      );
-    })
-  ) : (
-    <TableRow>
-      <TableCell colSpan={5} align="center">No users available</TableCell>
-    </TableRow>
-  )}
-</TableBody>
-
+          </TableBody>
         </Table>
       </TableContainer>
     </Box>
