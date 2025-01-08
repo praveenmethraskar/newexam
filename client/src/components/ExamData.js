@@ -97,6 +97,7 @@ const ExamData = () => {
       await deleteUserExamData(franchiseId, examId);
       setExamDataList(prevState => prevState.filter(exam => exam.examId !== examId));
       setFilteredExamData(prevState => prevState.filter(exam => exam.examId !== examId));
+      navigate('/dashboard');
     } catch (error) {
       console.error('Error deleting exam data:', error);
       setErrorMessage('Unable to delete exam data. Please try again later.');
@@ -142,6 +143,7 @@ const ExamData = () => {
       );
 
       setEditingExamId(null);
+      navigate('/dashboard');
     } catch (error) {
       console.error('Error updating exam data:', error);
       setErrorMessage('Unable to update exam data. Please try again later.');
@@ -150,6 +152,7 @@ const ExamData = () => {
 
   const handleCancel = () => {
     setEditingExamId(null);
+    
   };
 
   return (
