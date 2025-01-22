@@ -27,7 +27,7 @@ pipeline {
                     // Build the backend image
                     sh 'docker build -t praveenmethraskar/backend:latest -f backend/Dockerfile .'
                     // Build the frontend image
-                    sh 'docker build -t praveenmethraskar/frontend:latest -f client/Dockerfile .'
+                    sh 'docker build -t praveenmethraskar/client:latest -f client/Dockerfile .'
                 }
             }
         }
@@ -38,7 +38,7 @@ pipeline {
                     // Push images to Docker Hub
                     withDockerRegistry(credentialsId: 'docker-hub') {
                         sh 'docker push praveenmethraskar/backend:latest'
-                        sh 'docker push praveenmethraskar/frontend:latest'
+                        sh 'docker push praveenmethraskar/client:latest'
                     }
                 }
             }
