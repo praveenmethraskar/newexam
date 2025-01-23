@@ -1,30 +1,30 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import FranchiseList from './FranchiseList';
-import { logout } from '../services/api';
-import { Button, Container, Typography, Grid, Paper } from '@mui/material';
-import ExamCounts from './count';
+import React from "react"
+import { useNavigate } from "react-router-dom"
+import FranchiseList from "./FranchiseList"
+import { logout } from "../services/api"
+import { Button, Container, Typography, Grid, Paper } from "@mui/material"
+import ExamCounts from "./count"
 
 const Dashboard = () => {
-  const navigate = useNavigate();
-  
+  const navigate = useNavigate()
+
   const handleLogout = async () => {
     try {
-      await logout(navigate);
-      localStorage.removeItem('token');
-      navigate('/login');
+      await logout(navigate)
+      localStorage.removeItem("token")
+      navigate("/login")
     } catch (error) {
-      console.error('Logout failed:', error);
-      alert('There was an error logging out. Please try again.');
+      console.error("Logout failed:", error)
+      alert("There was an error logging out. Please try again.")
     }
-  };
+  }
 
   // Define common styles for header buttons
   const headerButtonStyles = {
-    padding: '14px 24px',
-    fontSize: '16px',
-    height: '56px', // Ensures all buttons have the same height
-  };
+    padding: "14px 24px",
+    fontSize: "16px",
+    height: "56px", // Ensures all buttons have the same height
+  }
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
@@ -45,7 +45,7 @@ const Dashboard = () => {
               color="primary"
               fullWidth
               sx={headerButtonStyles}
-              onClick={() => navigate('/create-superadmin')}
+              onClick={() => navigate("/create-superadmin")}
             >
               Create User
             </Button>
@@ -56,7 +56,7 @@ const Dashboard = () => {
               color="secondary"
               fullWidth
               sx={headerButtonStyles}
-              onClick={() => navigate('/create-franchise')}
+              onClick={() => navigate("/create-franchise")}
             >
               Create Franchise
             </Button>
@@ -68,13 +68,13 @@ const Dashboard = () => {
               fullWidth
               sx={{
                 ...headerButtonStyles,
-                backgroundColor: '#4CAF50',
-                '&:hover': {
-                  backgroundColor: '#45a049',
-                  boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)',
+                backgroundColor: "#4CAF50",
+                "&:hover": {
+                  backgroundColor: "#45a049",
+                  boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
                 },
               }}
-              onClick={() => navigate('/exam-data')}
+              onClick={() => navigate("/exam-data")}
             >
               Manage Exam Data
             </Button>
@@ -99,7 +99,7 @@ const Dashboard = () => {
         <FranchiseList />
       </Paper>
     </Container>
-  );
-};
+  )
+}
 
-export default Dashboard;
+export default Dashboard
