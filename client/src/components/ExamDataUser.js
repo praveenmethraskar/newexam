@@ -1,67 +1,65 @@
-import React, { useState, useEffect } from 'react';
-import { getExamData } from '../services/api';
+import React, { useState, useEffect } from "react"
+import { getExamData } from "../services/api"
 
 const ExamDataUser = () => {
-  const [examDataList, setExamDataList] = useState([]);
-  const [filteredExamData, setFilteredExamData] = useState([]);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [selectedFranchise, setSelectedFranchise] = useState('');  
+  const [examDataList, setExamDataList] = useState([])
+  const [filteredExamData, setFilteredExamData] = useState([])
+  const [errorMessage, setErrorMessage] = useState("")
+  const [selectedFranchise, setSelectedFranchise] = useState("")
 
   useEffect(() => {
     const fetchExamData = async () => {
       try {
-        const response = await getExamData();
-         
-  
+        const response = await getExamData()
+
         if (response && response.length > 0) {
-          const allExamData = response.flatMap(franchise => 
-            (franchise.examData || []).map(exam => {
-               
-  
-              const takerName = exam.name || 'Unknown'; 
-  
+          const allExamData = response.flatMap((franchise) =>
+            (franchise.examData || []).map((exam) => {
+              const takerName = exam.name || "Unknown"
+
               return {
-                franchiseId: franchise._id,  
+                franchiseId: franchise._id,
                 franchiseName: franchise.name,
                 location: franchise.location,
-                name: takerName,            
-                examName: exam.examName,    
-                date: new Date(exam.date).toLocaleDateString(), 
-                duration: exam.durationInMinutes,  
-                status: exam.status         
-              };
+                name: takerName,
+                examName: exam.examName,
+                date: new Date(exam.date).toLocaleDateString(),
+                duration: exam.durationInMinutes,
+                status: exam.status,
+              }
             })
-          );
-          setExamDataList(allExamData);
-          setFilteredExamData(allExamData); 
+          )
+          setExamDataList(allExamData)
+          setFilteredExamData(allExamData)
         } else {
-          setErrorMessage('No exam data available for your franchises.');
+          setErrorMessage("No exam data available for your franchises.")
         }
       } catch (error) {
-        console.error('Error fetching exam data:', error);
-        setErrorMessage('Unable to retrieve exam data. Please try again later.');
+        console.error("Error fetching exam data:", error)
+        setErrorMessage("Unable to retrieve exam data. Please try again later.")
       }
-    };
-  
-    fetchExamData();
-  }, []);
-  
-
-  
-  const handleFranchiseChange = (e) => {
-    const franchiseName = e.target.value;
-    setSelectedFranchise(franchiseName);
-
-    if (franchiseName === '') {
-      setFilteredExamData(examDataList);  
-    } else {
-      const filteredData = examDataList.filter(exam => exam.franchiseName === franchiseName);
-      setFilteredExamData(filteredData);
     }
-  };
 
+    fetchExamData()
+  }, [])
 
-  const franchiseNames = [...new Set(examDataList.map(exam => exam.franchiseName))];
+  const handleFranchiseChange = (e) => {
+    const franchiseName = e.target.value
+    setSelectedFranchise(franchiseName)
+
+    if (franchiseName === "") {
+      setFilteredExamData(examDataList)
+    } else {
+      const filteredData = examDataList.filter(
+        (exam) => exam.franchiseName === franchiseName
+      )
+      setFilteredExamData(filteredData)
+    }
+  }
+
+  const franchiseNames = [
+    ...new Set(examDataList.map((exam) => exam.franchiseName)),
+  ]
 
   return (
     <div style={styles.container}>
@@ -95,7 +93,8 @@ const ExamDataUser = () => {
                   <tr>
                     <th style={styles.th}>Franchise Name</th>
                     <th style={styles.th}>Location</th>
-                    <th style={styles.th}>Exam Taker Name</th> {/* Updated column */}
+                    <th style={styles.th}>Exam Taker Name</th>{" "}
+                    {/* Updated column */}
                     <th style={styles.th}>Exam Name</th>
                     <th style={styles.th}>Date</th>
                     <th style={styles.th}>Duration (minutes)</th>
@@ -107,7 +106,8 @@ const ExamDataUser = () => {
                     <tr key={index} style={styles.tr}>
                       <td style={styles.td}>{exam.franchiseName}</td>
                       <td style={styles.td}>{exam.location}</td>
-                      <td style={styles.td}>{exam.name}</td> {/* Exam Taker Name */}
+                      <td style={styles.td}>{exam.name}</td>{" "}
+                      {/* Exam Taker Name */}
                       <td style={styles.td}>{exam.examName}</td>
                       <td style={styles.td}>{exam.date}</td>
                       <td style={styles.td}>{exam.duration}</td>
@@ -118,75 +118,77 @@ const ExamDataUser = () => {
               </table>
             </div>
           ) : (
-            <p style={styles.noData}>No exam data available for the selected franchise.</p>
+            <p style={styles.noData}>
+              No exam data available for the selected franchise.
+            </p>
           )}
         </>
       )}
     </div>
-  );
-};
+  )
+}
 
 // CSS styles in JS format
 const styles = {
   container: {
-    padding: '20px',
-    backgroundColor: '#f8f9fa',
-    minHeight: '100vh',
+    padding: "20px",
+    backgroundColor: "#f8f9fa",
+    minHeight: "100vh",
   },
   header: {
-    fontSize: '2rem',
-    textAlign: 'center',
-    marginBottom: '20px',
+    fontSize: "2rem",
+    textAlign: "center",
+    marginBottom: "20px",
   },
   tableContainer: {
-    overflowX: 'auto',
-    marginTop: '20px',
+    overflowX: "auto",
+    marginTop: "20px",
   },
   table: {
-    width: '100%',
-    borderCollapse: 'collapse',
-    tableLayout: 'fixed',
-    marginBottom: '20px',
+    width: "100%",
+    borderCollapse: "collapse",
+    tableLayout: "fixed",
+    marginBottom: "20px",
   },
   th: {
-    padding: '12px',
-    backgroundColor: '#007bff',
-    color: 'white',
-    textAlign: 'left',
-    border: '1px solid #ddd',
+    padding: "12px",
+    backgroundColor: "#007bff",
+    color: "white",
+    textAlign: "left",
+    border: "1px solid #ddd",
   },
   td: {
-    padding: '12px',
-    textAlign: 'left',
-    border: '1px solid #ddd',
+    padding: "12px",
+    textAlign: "left",
+    border: "1px solid #ddd",
   },
   tr: {
-    transition: 'background-color 0.3s ease',
+    transition: "background-color 0.3s ease",
   },
   error: {
-    color: 'red',
-    textAlign: 'center',
-    marginBottom: '20px',
+    color: "red",
+    textAlign: "center",
+    marginBottom: "20px",
   },
   noData: {
-    textAlign: 'center',
-    padding: '20px',
-    color: '#888',
+    textAlign: "center",
+    padding: "20px",
+    color: "#888",
   },
   filterContainer: {
-    marginBottom: '20px',
-    textAlign: 'center',
+    marginBottom: "20px",
+    textAlign: "center",
   },
   filterLabel: {
-    marginRight: '10px',
-    fontSize: '1rem',
+    marginRight: "10px",
+    fontSize: "1rem",
   },
   filterSelect: {
-    padding: '8px',
-    fontSize: '1rem',
-    borderRadius: '4px',
-    border: '1px solid #ddd',
+    padding: "8px",
+    fontSize: "1rem",
+    borderRadius: "4px",
+    border: "1px solid #ddd",
   },
-};
+}
 
-export default ExamDataUser;
+export default ExamDataUser
