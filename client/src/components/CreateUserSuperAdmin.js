@@ -1,6 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import { createUser, getUsers, deleteUser, updateUser, getFranchises } from '../services/api';
+import React, { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom" // Import useNavigate
+import {
+  createUser,
+  getUsers,
+  deleteUser,
+  updateUser,
+  getFranchises,
+} from "../services/api"
 import {
   Button,
   TextField,
@@ -18,112 +24,126 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
-} from '@mui/material';
+} from "@mui/material"
 
 const CreateUserSuperAdmin = () => {
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate() // Initialize useNavigate
 
   const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-    name: '',
-    role: '',
+    username: "",
+    password: "",
+    name: "",
+    role: "",
     franchiseId: [], // Allow multiple franchises selection
-  });
+  })
 
-  const [franchises, setFranchises] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [editingUser, setEditingUser] = useState(null);
+  const [franchises, setFranchises] = useState([])
+  const [users, setUsers] = useState([])
+  const [editingUser, setEditingUser] = useState(null)
 
   useEffect(() => {
     const fetchFranchises = async () => {
       try {
-        const response = await getFranchises();
-        setFranchises(response.data);
+        const response = await getFranchises()
+        setFranchises(response.data)
       } catch (error) {
-        alert('Error fetching franchises: ' + (error.response?.data?.message || error.message));
+        alert(
+          "Error fetching franchises: " +
+            (error.response?.data?.message || error.message)
+        )
       }
-    };
+    }
 
     const fetchUsers = async () => {
       try {
-        const response = await getUsers();
-        setUsers(response);
+        const response = await getUsers()
+        setUsers(response)
       } catch (error) {
-        alert('Error fetching users: ' + (error.response?.data?.message || error.message));
+        alert(
+          "Error fetching users: " +
+            (error.response?.data?.message || error.message)
+        )
       }
-    };
+    }
 
-    fetchFranchises();
-    fetchUsers();
-  }, []);
+    fetchFranchises()
+    fetchUsers()
+  }, [])
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    if (name === 'franchiseId') {
-      setFormData({ ...formData, [name]: typeof value === 'string' ? value.split(',') : value });
+    const { name, value } = e.target
+    if (name === "franchiseId") {
+      setFormData({
+        ...formData,
+        [name]: typeof value === "string" ? value.split(",") : value,
+      })
     } else {
-      setFormData({ ...formData, [name]: value });
+      setFormData({ ...formData, [name]: value })
     }
-  };
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     try {
       if (editingUser) {
-        await updateUser(editingUser._id, formData);
-        alert('User updated successfully!');
+        await updateUser(editingUser._id, formData)
+        alert("User updated successfully!")
       } else {
-        await createUser(formData);
-        alert('User created successfully!');
-        navigate(-1); // Redirect to the previous page
+        await createUser(formData)
+        alert("User created successfully!")
+        navigate(-1) // Redirect to the previous page
       }
 
-      setEditingUser(null);
+      setEditingUser(null)
       setFormData({
-        username: '',
-        password: '',
-        name: '',
-        role: '',
+        username: "",
+        password: "",
+        name: "",
+        role: "",
         franchiseId: [],
-      });
+      })
 
-      const response = await getUsers();
-      setUsers(response);
+      const response = await getUsers()
+      setUsers(response)
     } catch (error) {
-      alert('Error creating/updating user: ' + (error.response?.data?.message || error.message));
+      alert(
+        "Error creating/updating user: " +
+          (error.response?.data?.message || error.message)
+      )
     }
-  };
+  }
 
   const handleEdit = (user) => {
-    setEditingUser(user);
+    setEditingUser(user)
     setFormData({
-      username: user.username || '',
-      password: '',
-      name: user.name || '',
-      role: user.role || '',
+      username: user.username || "",
+      password: "",
+      name: user.name || "",
+      role: user.role || "",
       franchiseId: user.franchiseId || [],
-    });
-  };
+    })
+  }
 
   const handleDelete = async (userId) => {
     try {
-      await deleteUser(userId);
-      alert('User deleted successfully!');
+      await deleteUser(userId)
+      alert("User deleted successfully!")
 
-      const response = await getUsers();
-      setUsers(response);
+      const response = await getUsers()
+      setUsers(response)
     } catch (error) {
-      alert('Failed to delete user. Please try again.');
+      alert("Failed to delete user. Please try again.")
     }
-  };
+  }
 
-  const isEditingSelf = editingUser && editingUser.role === 'superadmin';
+  const isEditingSelf = editingUser && editingUser.role === "superadmin"
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h4" sx={{ fontWeight: 'bold', marginBottom: 3 }}>Create or Edit User</Typography>
+      <Typography variant="h4" sx={{ fontWeight: "bold", marginBottom: 3 }}>
+        Create or Edit User
+      </Typography>
 
       <Paper sx={{ padding: 3, marginBottom: 4 }}>
         <form onSubmit={handleSubmit}>
@@ -208,11 +228,20 @@ const CreateUserSuperAdmin = () => {
               </FormControl>
             </Grid>
             <Grid item xs={12}>
-              <Button type="submit" variant="contained" color="primary" sx={{ marginRight: 2 }}>
-                {editingUser ? 'Update User' : 'Create User'}
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                sx={{ marginRight: 2 }}
+              >
+                {editingUser ? "Update User" : "Create User"}
               </Button>
               {editingUser && (
-                <Button variant="outlined" color="secondary" onClick={() => setEditingUser(null)}>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={() => setEditingUser(null)}
+                >
                   Cancel
                 </Button>
               )}
@@ -221,31 +250,44 @@ const CreateUserSuperAdmin = () => {
         </form>
       </Paper>
 
-      <Typography variant="h5" sx={{ fontWeight: 'bold', marginBottom: 2 }}>All Users</Typography>
+      <Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 2 }}>
+        All Users
+      </Typography>
 
-      <TableContainer component={Paper} sx={{ width: '100%' }}>
+      <TableContainer component={Paper} sx={{ width: "100%" }}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '1.1rem' }}>Username</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '1.1rem' }}>Name</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '1.1rem' }}>Role</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '1.1rem' }}>Franchise</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', fontSize: '1.1rem' }}>Actions</TableCell>
+              <TableCell sx={{ fontWeight: "bold", fontSize: "1.1rem" }}>
+                Username
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", fontSize: "1.1rem" }}>
+                Name
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", fontSize: "1.1rem" }}>
+                Role
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", fontSize: "1.1rem" }}>
+                Franchise
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", fontSize: "1.1rem" }}>
+                Actions
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {users.length > 0 ? (
               users.map((user) => {
-                const franchise = user.franchise || [];
-                const franchiseNames = franchise
-                  .map((franchiseItem) => {
-                    const franchiseDetails = franchises.find(
-                      (franchise) => franchise._id === franchiseItem._id
-                    );
-                    return franchiseDetails ? franchiseDetails.name : 'N/A';
-                  })
-                  .join(', ') || 'No franchise assigned';
+                const franchise = user.franchise || []
+                const franchiseNames =
+                  franchise
+                    .map((franchiseItem) => {
+                      const franchiseDetails = franchises.find(
+                        (franchise) => franchise._id === franchiseItem._id
+                      )
+                      return franchiseDetails ? franchiseDetails.name : "N/A"
+                    })
+                    .join(", ") || "No franchise assigned"
 
                 return (
                   <TableRow key={user._id}>
@@ -254,10 +296,14 @@ const CreateUserSuperAdmin = () => {
                     <TableCell>{user.role}</TableCell>
                     <TableCell>{franchiseNames}</TableCell>
                     <TableCell>
-                      <Button onClick={() => handleEdit(user)} color="primary" size="small">
+                      <Button
+                        onClick={() => handleEdit(user)}
+                        color="primary"
+                        size="small"
+                      >
                         Edit
                       </Button>
-                      {user.role !== 'superadmin' && (
+                      {user.role !== "superadmin" && (
                         <Button
                           onClick={() => handleDelete(user._id)}
                           color="error"
@@ -269,7 +315,7 @@ const CreateUserSuperAdmin = () => {
                       )}
                     </TableCell>
                   </TableRow>
-                );
+                )
               })
             ) : (
               <TableRow>
@@ -282,7 +328,7 @@ const CreateUserSuperAdmin = () => {
         </Table>
       </TableContainer>
     </Box>
-  );
-};
+  )
+}
 
-export default CreateUserSuperAdmin;
+export default CreateUserSuperAdmin
