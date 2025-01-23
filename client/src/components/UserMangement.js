@@ -1,87 +1,82 @@
-import React, { useState, useEffect } from 'react';
-import { getUsers, deleteUser, updateUser } from '../services/api';
+import React, { useState, useEffect } from "react"
+import { getUsers, deleteUser, updateUser } from "../services/api"
 
 const UserManagement = () => {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [editingUser, setEditingUser] = useState(null);
-  const [actionLoading, setActionLoading] = useState(false);
+  const [users, setUsers] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [editingUser, setEditingUser] = useState(null)
+  const [actionLoading, setActionLoading] = useState(false)
 
   useEffect(() => {
-    fetchUsers();
-  }, []);
-
+    fetchUsers()
+  }, [])
 
   const fetchUsers = async () => {
-    setLoading(true);
-    setError(null);
+    setLoading(true)
+    setError(null)
     try {
-      const response = await getUsers();
-      setUsers(response);
+      const response = await getUsers()
+      setUsers(response)
     } catch (err) {
-      setError('Failed to load users. Please try again later.');
-      console.error(err);
+      setError("Failed to load users. Please try again later.")
+      console.error(err)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
- 
   const handleDelete = async (userId) => {
-    if (!window.confirm('Are you sure you want to delete this user?')) return;
+    if (!window.confirm("Are you sure you want to delete this user?")) return
 
-    setActionLoading(true);
+    setActionLoading(true)
     try {
-      await deleteUser(userId);
-      setUsers((prev) => prev.filter((user) => user._id !== userId));
-      setError(null);
+      await deleteUser(userId)
+      setUsers((prev) => prev.filter((user) => user._id !== userId))
+      setError(null)
     } catch (err) {
-      setError('Error deleting user. Please try again later.');
-      console.error(err);
+      setError("Error deleting user. Please try again later.")
+      console.error(err)
     } finally {
-      setActionLoading(false);
+      setActionLoading(false)
     }
-  };
+  }
 
-  
   const handleUpdate = async () => {
-    if (!editingUser) return;
+    if (!editingUser) return
 
-    setActionLoading(true);
+    setActionLoading(true)
     try {
       const updatedUser = await updateUser(editingUser._id, {
         username: editingUser.username,
         role: editingUser.role,
-      });
+      })
       setUsers((prev) =>
         prev.map((user) => (user._id === editingUser._id ? updatedUser : user))
-      );
-      closeEditForm();
+      )
+      closeEditForm()
     } catch (err) {
-      setError('Error updating user. Please try again later.');
-      console.error(err);
+      setError("Error updating user. Please try again later.")
+      console.error(err)
     } finally {
-      setActionLoading(false);
+      setActionLoading(false)
     }
-  };
+  }
 
- 
   const openEditForm = (user) => {
-    setEditingUser({ ...user });
-  };
+    setEditingUser({ ...user })
+  }
 
- 
   const closeEditForm = () => {
-    setEditingUser(null);
-  };
+    setEditingUser(null)
+  }
 
   return (
     <div>
       <h1>User Management</h1>
 
       {loading && <p>Loading users...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
       {!loading && users.length > 0 && (
         <table>
@@ -103,7 +98,7 @@ const UserManagement = () => {
                     onClick={() => handleDelete(user._id)}
                     disabled={actionLoading}
                   >
-                    {actionLoading ? 'Deleting...' : 'Delete'}
+                    {actionLoading ? "Deleting..." : "Delete"}
                   </button>
                 </td>
               </tr>
@@ -119,8 +114,8 @@ const UserManagement = () => {
           <h2>Edit User</h2>
           <form
             onSubmit={(e) => {
-              e.preventDefault();
-              handleUpdate();
+              e.preventDefault()
+              handleUpdate()
             }}
           >
             <div>
@@ -130,7 +125,10 @@ const UserManagement = () => {
                 type="text"
                 value={editingUser.username}
                 onChange={(e) =>
-                  setEditingUser((prev) => ({ ...prev, username: e.target.value }))
+                  setEditingUser((prev) => ({
+                    ...prev,
+                    username: e.target.value,
+                  }))
                 }
               />
             </div>
@@ -149,7 +147,7 @@ const UserManagement = () => {
             </div>
             <div>
               <button type="submit" disabled={actionLoading}>
-                {actionLoading ? 'Saving...' : 'Save Changes'}
+                {actionLoading ? "Saving..." : "Save Changes"}
               </button>
               <button type="button" onClick={closeEditForm}>
                 Cancel
@@ -159,7 +157,7 @@ const UserManagement = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default UserManagement;
+export default UserManagement
