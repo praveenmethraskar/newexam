@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const API = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL || "http://15.207.72.60:3001",
+  baseURL: process.env.REACT_APP_API_BASE_URL || "http://13.201.68.8:3001",
 })
 
 export default function getAuthToken() {
@@ -256,7 +256,7 @@ export const getAllExamCounts = async (franchiseId, period) => {
 
 export const getExamData = async () => {
   const token = sessionStorage.getItem("token") // Get the token from sessionStorage
-  const response = await axios.get("http://15.207.72.60:3001/api/exam-data", {
+  const response = await axios.get("http://13.201.68.8:3001/api/exam-data", {
     headers: {
       Authorization: `Bearer ${token}`,
     },
