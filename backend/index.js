@@ -8,7 +8,7 @@ const cors = require("cors")
 app.use(cors())
 
 // Database connection
-mongoose.connect("mongodb://13.201.68.8:27017/exam_center", {
+mongoose.connect("mongodb://0.0.0.0:27017/exam_center", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
